@@ -31,7 +31,7 @@
 /*
  * Function Declarations
  */
-static void cReceive_yArtM_sendMessage(HvBase *, int, const HvMessage *const);
+static void cReceive_EqtGI_sendMessage(HvBase *, int, const HvMessage *const);
 
 
 
@@ -43,7 +43,7 @@ static void ctx_intern_scheduleMessageForReceiver(
     HvBase *const _c, hv_uint32_t receiverHash, HvMessage *m) {
   switch (receiverHash) {
     case 0x345FC008: { // freq
-      ctx_scheduleMessage(_c, m, &cReceive_yArtM_sendMessage, 0);
+      ctx_scheduleMessage(_c, m, &cReceive_EqtGI_sendMessage, 0);
       break;
     }
     default: return;
@@ -88,7 +88,7 @@ HV_EXPORT Hv_alsa_heavy1 *hv_alsa_heavy1_new_with_options(double sampleRate, int
   Base(_c)->numBytes += mq_initWithPoolSize(&Base(_c)->mq, poolKb);
   Base(_c)->numBytes += hLp_init(&Base(_c)->msgPipe, queueKb*1024);
   HV_SPINLOCK_RELEASE(Base(_c)->msgLock);
-  Base(_c)->numBytes += sPhasor_k_init(&_c->sPhasor_eDzMI, 0.0f, sampleRate);
+  Base(_c)->numBytes += sPhasor_k_init(&_c->sPhasor_Z1cuA, 440.0f, sampleRate);
 
   // loadbang
 
@@ -118,8 +118,8 @@ HV_EXPORT void hv_alsa_heavy1_free(Hv_alsa_heavy1 *_c) {
 /*
  * Static Function Implementation
  */
-static void cReceive_yArtM_sendMessage(HvBase *_c, int letIn, const HvMessage *const m) {
-  sPhasor_k_onMessage(_c, &Context(_c)->sPhasor_eDzMI, 0, m);
+static void cReceive_EqtGI_sendMessage(HvBase *_c, int letIn, const HvMessage *const m) {
+  sPhasor_k_onMessage(_c, &Context(_c)->sPhasor_Z1cuA, 0, m);
 }
 
 
@@ -169,7 +169,7 @@ HV_EXPORT int hv_alsa_heavy1_process(Hv_alsa_heavy1 *const _c, float **const inp
     __hv_zero_f(VOf(O1));
 
     // process all signal functions
-    __hv_phasor_k_f(&_c->sPhasor_eDzMI, VOf(Bf0));
+    __hv_phasor_k_f(&_c->sPhasor_Z1cuA, VOf(Bf0));
     __hv_var_k_f(VOf(Bf1), 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f);
     __hv_sub_f(VIf(Bf0), VIf(Bf1), VOf(Bf1));
     __hv_abs_f(VIf(Bf1), VOf(Bf1));
@@ -185,8 +185,10 @@ HV_EXPORT int hv_alsa_heavy1_process(Hv_alsa_heavy1 *const _c, float **const inp
     __hv_mul_f(VIf(Bf2), VIf(Bf4), VOf(Bf4));
     __hv_sub_f(VIf(Bf1), VIf(Bf4), VOf(Bf4));
     __hv_fma_f(VIf(Bf0), VIf(Bf3), VIf(Bf4), VOf(Bf4));
-    __hv_add_f(VIf(Bf4), VIf(O0), VOf(O0));
-    __hv_add_f(VIf(Bf4), VIf(O1), VOf(O1));
+    __hv_var_k_f(VOf(Bf3), 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f);
+    __hv_mul_f(VIf(Bf4), VIf(Bf3), VOf(Bf3));
+    __hv_add_f(VIf(Bf3), VIf(O1), VOf(O1));
+    __hv_add_f(VIf(Bf3), VIf(O0), VOf(O0));
 
     // save output vars to output buffer
     __hv_store_f(outputBuffers[0]+n, VIf(O0));

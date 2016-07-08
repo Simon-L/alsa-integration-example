@@ -39,7 +39,7 @@ typedef struct Hv_alsa_heavy1 {
   HvBase base;
 
   // objects
-  SignalPhasor sPhasor_eDzMI;
+  SignalPhasor sPhasor_Z1cuA;
 } Hv_alsa_heavy1;
 
 #endif // _HEAVYCONTEXT_ALSA_HEAVY1_H_
